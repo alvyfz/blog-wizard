@@ -16,10 +16,10 @@ import { CreateBlogFormData, createBlogSchema } from "@/lib/zod/create-blog";
 import { useAlertHelpers } from "@/contexts/alert-context";
 import { useRouter } from "next/navigation";
 import { categories } from "@/mock/categories";
-import { BlogMetadataForm } from "@/components/create-blog/metadata-form-section";
-import { SummaryFormSection } from "@/components/create-blog/summary-form-section";
-import { ContentFormSection } from "@/components/create-blog/content-form-section";
-import { ReviewFormSection } from "@/components/create-blog/review-form-section";
+import { BlogMetadataForm } from "@/components/blog-create/metadata-form-section";
+import { SummaryFormSection } from "@/components/blog-create/summary-form-section";
+import { ContentFormSection } from "@/components/blog-create/content-form-section";
+import { ReviewFormSection } from "@/components/blog-create/review-form-section";
 
 export default function CreateBlogPage() {
   const router = useRouter();
