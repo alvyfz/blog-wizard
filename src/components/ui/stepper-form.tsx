@@ -101,7 +101,16 @@ function StepperForm<TFieldValues extends FieldValues>({
         <div className="space-y-6">
           {/* Step Content */}
           <div className="min-h-[200px]">
-            {steps[stepper.currentStep].component}
+            {steps?.map((step, index) => (
+              <div
+                key={step.id}
+                className={cn("hidden", {
+                  block: index === stepper.currentStep,
+                })}
+              >
+                {step.component}
+              </div>
+            ))}
           </div>
 
           {/* Step Errors */}

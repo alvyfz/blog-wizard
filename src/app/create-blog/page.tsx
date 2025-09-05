@@ -13,20 +13,19 @@ import {
   SelectField,
   TextareaField,
 } from "@/components/ui/form-fields";
-import { urlFriendly } from "@/lib/utils";
+import {
+  getFromLocalStorage,
+  saveToLocalStorage,
+  urlFriendly,
+} from "@/lib/utils";
 import { CreateBlogFormData, createBlogSchema } from "@/lib/zod/create-blog";
+import { useAlertHelpers } from "@/contexts/alert-context";
+import { useRouter } from "next/navigation";
+import { categories } from "@/mock/categories";
 
-// Data for select options
-const categories = [
-  { value: "technology", label: "Technology" },
-  { value: "lifestyle", label: "Lifestyle" },
-  { value: "business", label: "Business" },
-  { value: "health", label: "Health" },
-  { value: "travel", label: "Travel" },
-  { value: "food", label: "Food & Cooking" },
-];
-
-export default function StepperFormExample() {
+export default function CreateBlogPage() {
+  const router = useRouter();
+  const currBlogs = getFromLocalStorage<CreateBlogFormData[]>("blogData") || [];
   const form = useForm<CreateBlogFormData>({
     resolver: zodResolver(createBlogSchema),
     defaultValues: {
@@ -41,13 +40,20 @@ export default function StepperFormExample() {
     mode: "onChange",
   });
 
+  const { success, error } = useAlertHelpers();
+
   const watchedValues = form.watch();
 
-  const handleSubmit = async (data: CreateBlogFormData) => {
-    console.log("Form submitted:", data);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    alert("Form submitted successfully!");
+  const handleSubmit = (data: CreateBlogFormData) => {
+    try {
+      saveToLocalStorage("blogData", [...currBlogs, data]);
+      success("Success", "Blog created successfully!", () =>
+        router.replace("/")
+      );
+    } catch (err: any) {
+      console.log(err);
+      error("Error", "Blog creation failed!");
+    }
   };
 
   // Watch title changes and update slug accordingly
@@ -55,6 +61,20 @@ export default function StepperFormExample() {
     const subscription = form.watch((value, { name }) => {
       if (name === "title") {
         const slugValue = urlFriendly(value.title || "");
+        form.setValue("slug", slugValue);
+      }
+
+      // Check if slug already exists in current blogs
+      if (name === "title") {
+        let slugValue = urlFriendly(value.title || "");
+        let counter = 1;
+
+        // Keep checking and modifying slug until a unique one is found
+        while (currBlogs.some((blog) => blog.slug === slugValue)) {
+          slugValue = `${urlFriendly(value.title || "")}-${counter}`;
+          counter++;
+        }
+
         form.setValue("slug", slugValue);
       }
     });
@@ -74,16 +94,17 @@ export default function StepperFormExample() {
           <h3 className="text-lg font-semibold">Blog Metadata</h3>
           <InputField
             control={form.control}
-            name="title"
-            label="Title"
-            placeholder="Enter the title of your blog post"
-            required
-          />
-          <InputField
-            control={form.control}
             name="slug"
             label="Slug"
             placeholder="Enter the slug of your blog post"
+            required
+            disabled
+          />
+          <InputField
+            control={form.control}
+            name="title"
+            label="Title"
+            placeholder="Enter the title of your blog post"
             required
           />
           <InputField
@@ -104,13 +125,6 @@ export default function StepperFormExample() {
       component: (
         <div className="space-y-4">
           <h3 className="text-lg font-semibold">Blog Summary & Category</h3>
-          <TextareaField
-            control={form.control}
-            name="summary"
-            label="Summary"
-            placeholder="Enter a brief summary of your blog post"
-            required
-          />
           <SelectField
             control={form.control}
             name="category"
@@ -118,6 +132,13 @@ export default function StepperFormExample() {
             placeholder="Select a category"
             required
             options={categories}
+          />
+          <TextareaField
+            control={form.control}
+            name="summary"
+            label="Summary"
+            placeholder="Enter a brief summary of your blog post"
+            required
           />
         </div>
       ),

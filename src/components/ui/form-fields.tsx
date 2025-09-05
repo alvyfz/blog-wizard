@@ -73,7 +73,6 @@ export function InputField<
             placeholder={placeholder}
             disabled={disabled}
             {...field}
-            value={field.value || ""}
             {...rest}
           />
           {description && (
@@ -128,6 +127,8 @@ export function TextareaField<
             </FormLabel>
           )}
           <Textarea
+            key={`textarea-${name}`}
+            aria-label={`textarea-${name}`}
             placeholder={placeholder}
             disabled={disabled}
             rows={rows}

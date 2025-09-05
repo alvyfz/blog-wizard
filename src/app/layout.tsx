@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { geistSans } from "@/lib/fonts";
 import { isDevEnv } from "@/lib/utils";
+import { AlertProvider } from "@/contexts/alert-context";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -20,7 +21,7 @@ export default function RootLayout({
           isDevEnv ? "debug-screens" : ""
         }`}
       >
-        {children}
+        <AlertProvider>{children}</AlertProvider>
       </body>
     </html>
   );
