@@ -8,12 +8,6 @@ import { StepConfig } from "@/hooks/use-form-stepper";
 import Layout from "@/components/layout/layout";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
-  CheckboxField,
-  InputField,
-  SelectField,
-  TextareaField,
-} from "@/components/ui/form-fields";
-import {
   getFromLocalStorage,
   saveToLocalStorage,
   urlFriendly,
@@ -22,6 +16,10 @@ import { CreateBlogFormData, createBlogSchema } from "@/lib/zod/create-blog";
 import { useAlertHelpers } from "@/contexts/alert-context";
 import { useRouter } from "next/navigation";
 import { categories } from "@/mock/categories";
+import { BlogMetadataForm } from "@/components/create-blog/metadata-form-section";
+import { SummaryFormSection } from "@/components/create-blog/summary-form-section";
+import { ContentFormSection } from "@/components/create-blog/content-form-section";
+import { ReviewFormSection } from "@/components/create-blog/review-form-section";
 
 export default function CreateBlogPage() {
   const router = useRouter();
@@ -46,7 +44,10 @@ export default function CreateBlogPage() {
 
   const handleSubmit = (data: CreateBlogFormData) => {
     try {
-      saveToLocalStorage("blogData", [...currBlogs, data]);
+      saveToLocalStorage("blogData", [
+        ...currBlogs,
+        { ...data, date: new Date() },
+      ]);
       success("Success", "Blog created successfully!", () =>
         router.replace("/")
       );
@@ -89,77 +90,21 @@ export default function CreateBlogPage() {
       title: "Blog Metadata",
       description: "Enter the metadata for your blog post",
       fields: ["title", "author", "slug"],
-      component: (
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold">Blog Metadata</h3>
-          <InputField
-            control={form.control}
-            name="slug"
-            label="Slug"
-            placeholder="Enter the slug of your blog post"
-            required
-            disabled
-          />
-          <InputField
-            control={form.control}
-            name="title"
-            label="Title"
-            placeholder="Enter the title of your blog post"
-            required
-          />
-          <InputField
-            control={form.control}
-            name="author"
-            label="Author"
-            placeholder="Enter the author of your blog post"
-            required
-          />
-        </div>
-      ),
+      component: <BlogMetadataForm form={form} />,
     },
     {
       id: "summary",
       title: "Blog Summary & Category",
       description: "Enter the summary and category for your blog post",
       fields: ["summary", "category"],
-      component: (
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold">Blog Summary & Category</h3>
-          <SelectField
-            control={form.control}
-            name="category"
-            label="Category"
-            placeholder="Select a category"
-            required
-            options={categories}
-          />
-          <TextareaField
-            control={form.control}
-            name="summary"
-            label="Summary"
-            placeholder="Enter a brief summary of your blog post"
-            required
-          />
-        </div>
-      ),
+      component: <SummaryFormSection form={form} />,
     },
     {
       id: "content",
       title: "Blog Content",
       description: "Enter the content for your blog post",
       fields: ["content"],
-      component: (
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold">Blog Content</h3>
-          <TextareaField
-            control={form.control}
-            name="content"
-            label="Content"
-            placeholder="Write your blog content here..."
-            required
-          />
-        </div>
-      ),
+      component: <ContentFormSection form={form} />,
     },
     {
       id: "review",
@@ -167,44 +112,11 @@ export default function CreateBlogPage() {
       description: "Review your blog post and submit",
       fields: ["confirm"],
       component: (
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold">Review & Submit</h3>
-          <div className="bg-muted p-4 rounded-lg space-y-3">
-            <h4 className="font-medium">Blog Post Summary:</h4>
-            <div className="text-sm space-y-1">
-              <p className="break-words">
-                <strong>Title:</strong> {watchedValues.title}
-              </p>
-              <p className="break-words">
-                <strong>Author:</strong> {watchedValues.author}
-              </p>
-              <p className="break-words">
-                <strong>Slug:</strong> {watchedValues.slug}
-              </p>
-              <p className="break-words">
-                <strong>Category:</strong>{" "}
-                {
-                  categories.find((c) => c.value === watchedValues.category)
-                    ?.label
-                }
-              </p>
-              <p className="break-words">
-                <strong>Summary:</strong> {watchedValues.summary}
-              </p>
-              <p className="break-words">
-                <strong>Content:</strong> {watchedValues.content}
-              </p>
-            </div>
-          </div>
-          <div className="space-y-3">
-            <CheckboxField
-              control={form.control}
-              name="confirm"
-              label="I confirm that the above information is correct"
-              required
-            />
-          </div>
-        </div>
+        <ReviewFormSection
+          form={form}
+          categories={categories}
+          watchedValues={watchedValues}
+        />
       ),
     },
   ];

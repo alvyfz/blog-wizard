@@ -137,7 +137,7 @@ export default {
           "700": "#023d6d",
           "800": "#012d4f",
           "900": "#011c32",
-          foreground: "#fff",
+          "foreground": "#fff",
           DEFAULT: "#035ea7",
         },
         white: Colors.white,
@@ -205,10 +205,10 @@ export default {
           lineHeight: "1.33",
         },
       },
-
       borderWidth: {
         DEFAULT: "1px",
       },
     },
   },
+  plugins: [],
 } satisfies Config;
