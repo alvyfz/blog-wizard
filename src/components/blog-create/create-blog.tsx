@@ -5,7 +5,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { StepperForm } from "@/components/ui/stepper-form";
 import { StepConfig } from "@/hooks/use-form-stepper";
-import Layout from "@/components/layout/layout";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
   getFromLocalStorage,
@@ -81,7 +80,7 @@ function CreateBlogPage() {
     });
 
     return () => subscription.unsubscribe();
-  }, [form]);
+  }, [form, currBlogs]);
 
   // Steps configuration
   const steps: StepConfig[] = [

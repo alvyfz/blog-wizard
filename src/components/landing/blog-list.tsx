@@ -42,11 +42,11 @@ const BlogList = () => {
         <CardContent className="text-center">
           <div className="space-y-3">
             <h3 className="text-lg font-semibold text-muted-foreground">
-              You haven't created any blogs yet
+              You haven&apos;t created any blogs yet
             </h3>
             <p className="text-sm text-muted-foreground">
-              Start creating your first blog by clicking the "Create Blog"
-              button above.
+              Start creating your first blog by clicking the &quot;Create
+              Blog&quot; button above.
             </p>
           </div>
         </CardContent>
