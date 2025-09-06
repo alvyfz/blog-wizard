@@ -30,6 +30,9 @@ export default function BlogPage({ params }: BlogPageProps) {
   useEffect(() => {
     const fetchBlog = () => {
       const foundBlog = getBlogBySlug(params.slug);
+      if (foundBlog) {
+        document.title = `${foundBlog.title} | Blog Wizard`;
+      }
       setBlog(foundBlog);
       setLoading(false);
     };

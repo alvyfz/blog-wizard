@@ -27,7 +27,7 @@ export default function BlogDetail({ blog }: BlogDetailProps) {
   };
 
   return (
-    <div className="w-full  mt-4">
+    <div className="w-full my-4">
       {/* Back Button */}
       <Link
         href="/"
@@ -72,7 +72,7 @@ export default function BlogDetail({ blog }: BlogDetailProps) {
       </header>
 
       {/* Blog Content */}
-      <article className="bg-white rounded-lg shadow-sm border p-8">
+      <article className="bg-white rounded-lg shadow-sm border p-4">
         <div
           className="prose prose-lg max-w-none"
           style={{
