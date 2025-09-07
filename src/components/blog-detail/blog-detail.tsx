@@ -78,13 +78,7 @@ export default function BlogDetail({ blog }: BlogDetailProps) {
 
       {/* Blog Content */}
       <article className="bg-white rounded-lg shadow-sm border p-4">
-        <div
-          className="prose prose-lg max-w-none"
-          style={{
-            lineHeight: "1.8",
-            fontSize: "1.1rem",
-          }}
-        >
+        <div className="max-w-none leading-relaxed text-lg">
           {blog.content.split("\n").map((paragraph, index) => {
             if (paragraph.trim() === "") return null;
             return (
