@@ -1,6 +1,7 @@
 import { ArrowLeft, Calendar, User, Tag } from "lucide-react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
+import { categories } from "@/mock/categories";
 
 interface BlogData {
   title: string;
@@ -25,6 +26,10 @@ export default function BlogDetail({ blog }: BlogDetailProps) {
       day: "numeric",
     });
   };
+
+  const categoryLabel =
+    categories.find((cat) => cat.value === blog.category)?.label ||
+    blog.category;
 
   return (
     <div className="w-full my-4">
@@ -56,10 +61,10 @@ export default function BlogDetail({ blog }: BlogDetailProps) {
         </div>
 
         {/* Category */}
-        {blog.category && (
+        {categoryLabel && (
           <div className="flex items-center gap-2 mb-6">
             <Tag className="w-4 h-4 text-gray-500" />
-            <Badge variant="secondary">{blog.category}</Badge>
+            <Badge variant="secondary">{categoryLabel}</Badge>
           </div>
         )}
 
